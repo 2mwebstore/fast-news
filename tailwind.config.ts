@@ -1,0 +1,88 @@
+import type { Config } from 'tailwindcss'
+
+// The palette and type scale from §2 and §3. Everything the UI uses is defined
+// here so a colour never appears as a raw hex in a component.
+export default <Partial<Config>>{
+  content: [
+    './components/**/*.{vue,js,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './composables/**/*.{js,ts}',
+    './app.vue',
+    './error.vue',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: '#1E3A8A',
+          dark: '#172554',
+          accent: '#2563EB',
+        },
+        surface: {
+          DEFAULT: '#FFFFFF',
+          muted: '#F8FAFC',
+        },
+        line: '#E2E8F0',
+        ink: {
+          DEFAULT: '#0F172A',
+          muted: '#64748B',
+        },
+        // Red is reserved for BREAKING / LIVE / URGENT / ALERT (§2).
+        breaking: '#DC2626',
+        success: '#16A34A',
+        warning: '#F59E0B',
+      },
+      fontFamily: {
+        // Khmer first in every stack: the Khmer face must win for Khmer
+        // glyphs even inside otherwise-Latin text.
+        khmer: ['"Kantumruy Pro"', 'Battambang', 'Noto Sans Khmer', 'sans-serif'],
+        sans: ['Manrope', 'Inter', '"Kantumruy Pro"', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        // Khmer needs more line height than Latin at the same size: the script
+        // stacks diacritics above and below the baseline.
+        'kh-sm': ['0.875rem', { lineHeight: '1.75' }],
+        'kh-base': ['1rem', { lineHeight: '1.9' }],
+        'kh-lg': ['1.125rem', { lineHeight: '1.9' }],
+        'kh-xl': ['1.375rem', { lineHeight: '1.7' }],
+        'kh-2xl': ['1.75rem', { lineHeight: '1.55' }],
+        'kh-3xl': ['2.125rem', { lineHeight: '1.45' }],
+        'kh-4xl': ['2.75rem', { lineHeight: '1.35' }],
+      },
+      maxWidth: {
+        content: '1280px',
+        prose: '720px',
+      },
+      boxShadow: {
+        card: '0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06)',
+        lift: '0 4px 12px rgba(15, 23, 42, 0.08)',
+      },
+      keyframes: {
+        'pulse-dot': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.35' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+        'slide-down': {
+          '0%': { transform: 'translateY(-100%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
+      animation: {
+        'pulse-dot': 'pulse-dot 1.4s ease-in-out infinite',
+        marquee: 'marquee 40s linear infinite',
+        shimmer: 'shimmer 1.6s ease-in-out infinite',
+        'slide-down': 'slide-down 0.25s ease-out',
+      },
+    },
+  },
+  plugins: [],
+}

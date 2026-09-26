@@ -1,0 +1,1 @@
+import{ag as i,ah as n,O as o}from"./WH_6qSHm.js";import{a as s}from"./XraxtqFd.js";const m=i(async e=>{let t,a;if(e.path==="/admin/login")return;const r=s();if([t,a]=n(()=>r.restore()),await t,a(),!r.isAuthenticated)return o({path:"/admin/login",query:{redirect:e.fullPath}})});export{m as default};

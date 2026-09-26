@@ -1,0 +1,100 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  compatibilityDate: '2025-01-01',
+  devtools: { enabled: false },
+
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt'],
+
+  css: ['~/assets/css/main.css'],
+
+  runtimeConfig: {
+    // Server-only: used by the sitemap/robots proxies, which talk to the API
+    // over the internal network rather than the public URL.
+    apiInternalBase: process.env.NUXT_API_INTERNAL_BASE || process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8080',
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8080',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      siteName: 'Cambodia Fast News',
+      siteNameKh: 'ព័ត៌មានលឿនរហ័សកម្ពុជា',
+      wsUrl: process.env.NUXT_PUBLIC_WS_URL || 'ws://localhost:8080/ws',
+    },
+  },
+
+  app: {
+    // A short cross-fade between routes. Disabled automatically for readers
+    // who have asked for reduced motion (see assets/css/main.css).
+    pageTransition: { name: 'page', mode: 'out-in' },
+
+    head: {
+      htmlAttrs: { lang: 'km' },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+        { name: 'theme-color', content: '#1E3A8A' },
+        { name: 'format-detection', content: 'telephone=no' },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'manifest', href: '/manifest.webmanifest' },
+        { rel: 'apple-touch-icon', href: '/icons/icon-192.png' },
+
+        // Preconnect before the stylesheet so the font fetch starts one RTT
+        // earlier — Khmer webfonts are large and gate the largest paint.
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap',
+        },
+      ],
+    },
+  },
+
+  // Route rules set the caching and rendering strategy per section (§56).
+  // The homepage and article pages are server-rendered so they are indexable
+  // and fast on first paint; the admin is a client-side SPA and never cached.
+  routeRules: {
+    '/': { isr: 60 },
+    '/news/**': { isr: 300 },
+    '/category/**': { isr: 120 },
+    '/author/**': { isr: 600 },
+    // The vertical Shorts feed was removed. It was a public, indexable URL, so
+    // it redirects rather than 404s — the more specific rule has to come first.
+    '/video/shorts': { redirect: { to: '/video', statusCode: 301 } },
+    '/video/**': { isr: 300 },
+    '/live': { ssr: true, headers: { 'cache-control': 'public, max-age=15' } },
+    // No `robots` key here: that belongs to @nuxtjs/robots, which this project
+    // does not use, so it was silently doing nothing. /search sets its own
+    // noindex meta, and the API's production robots.txt disallows both paths.
+    '/search': { ssr: true },
+    '/admin/**': { ssr: false, headers: { 'cache-control': 'no-store' } },
+  },
+
+  nitro: {
+    compressPublicAssets: { gzip: true, brotli: true },
+  },
+
+  experimental: {
+    // payloadExtraction is deliberately NOT enabled. It exists for static
+    // generation, and this app is SSR + ISR. Turning it on makes the client
+    // depend on the `#app-manifest` virtual module, which fails to resolve in
+    // dev — the client bundle then never executes, so nothing hydrates and
+    // every interactive control (the mobile menu, search, tabs) is dead.
+    defaults: {
+      nuxtLink: {
+        // Prefetch on hover or focus, not on visibility.
+        //
+        // A news feed puts dozens of links on screen at once, and the default
+        // prefetch-when-visible fires a full payload render for every one of
+        // them the moment the page loads. That is a burst of API calls the
+        // reader mostly never uses — wasted mobile data for them, and a
+        // thundering herd against the API. Prefetching on intent keeps the
+        // navigation feeling instant without the waste.
+        prefetch: true,
+        prefetchOn: { visibility: false, interaction: true },
+      },
+    },
+  },
+
+  typescript: { strict: true },
+})
