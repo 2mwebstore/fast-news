@@ -62,6 +62,7 @@ const OG_IMAGE_HEIGHT = 675
 export function useSiteSeo(input: BaseSeoInput) {
   const config = useRuntimeConfig()
   const { locale } = useLocale()
+  const { nameEn } = useSite()
   const siteUrl = config.public.siteUrl.replace(/\/$/, '')
 
   // The canonical is the clean path by default. Tracking parameters are dropped
@@ -103,7 +104,7 @@ export function useSiteSeo(input: BaseSeoInput) {
     ogImageWidth: OG_IMAGE_WIDTH,
     ogImageHeight: OG_IMAGE_HEIGHT,
     ogImageAlt: input.imageAlt || input.title,
-    ogSiteName: config.public.siteName,
+    ogSiteName: nameEn,
     ogLocale: () => (lang.value === 'km' ? 'km_KH' : 'en_US'),
 
     twitterCard: 'summary_large_image',
@@ -132,23 +133,32 @@ export function useJsonLd(schema: Record<string, unknown> | Record<string, unkno
   })
 }
 
+/**
+ * The publisher logo for structured data: the one uploaded in Admin →
+ * Settings, else the 512px app icon. Its size is only stated for the icon —
+ * an uploaded file's dimensions are not known here, and a wrong size is worse
+ * than none.
+ */
+function schemaLogo(siteUrl: string, logoUrl: string): Record<string, unknown> {
+  if (!logoUrl) {
+    return { '@type': 'ImageObject', url: `${siteUrl}/icons/icon-512.png`, width: 512, height: 512 }
+  }
+  return { '@type': 'ImageObject', url: logoUrl.startsWith('/') ? `${siteUrl}${logoUrl}` : logoUrl }
+}
+
 /** Organization + WebSite, emitted once on the homepage (§47, §48). */
 export function useOrganizationSchema(socialProfiles: string[] = []) {
   const config = useRuntimeConfig()
   const siteUrl = config.public.siteUrl.replace(/\/$/, '')
+  const { nameEn, nameKh, logoUrl } = useSite()
 
   const organization: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'NewsMediaOrganization',
-    name: config.public.siteName,
-    alternateName: config.public.siteNameKh,
+    name: nameEn.value,
+    alternateName: nameKh.value,
     url: siteUrl,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${siteUrl}/logo.png`,
-      width: 600,
-      height: 60,
-    },
+    logo: schemaLogo(siteUrl, logoUrl.value),
   }
   // sameAs is only emitted for profiles that actually exist (§47). An invented
   // profile URL is a factual error in structured data.
@@ -157,7 +167,7 @@ export function useOrganizationSchema(socialProfiles: string[] = []) {
   const website = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: config.public.siteName,
+    name: nameEn.value,
     url: siteUrl,
     inLanguage: 'km',
     potentialAction: {
@@ -176,6 +186,7 @@ export function useOrganizationSchema(socialProfiles: string[] = []) {
  */
 export function useArticleSchema(article: ArticleDetail) {
   const config = useRuntimeConfig()
+  const { nameEn, logoUrl } = useSite()
   const siteUrl = config.public.siteUrl.replace(/\/$/, '')
   const url = `${siteUrl}/news/${article.slug}`
 
@@ -188,8 +199,8 @@ export function useArticleSchema(article: ArticleDetail) {
     inLanguage: 'km',
     publisher: {
       '@type': 'NewsMediaOrganization',
-      name: config.public.siteName,
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png`, width: 600, height: 60 },
+      name: nameEn.value,
+      logo: schemaLogo(siteUrl, logoUrl.value),
     },
   }
 
@@ -269,11 +280,12 @@ export function useHreflang(path: string, hasEnglish: boolean) {
 
 /** Category page metadata, falling back to a derived description. */
 export function useCategorySeo(category: CategoryDetail, page: number) {
-  const title = category.seoTitleKh || `${category.nameKh} | ព័ត៌មានលឿនរហ័សកម្ពុជា`
+  const { nameEn, nameKh } = useSite()
+  const title = category.seoTitleKh || `${category.nameKh} | ${nameKh.value}`
   const description =
     category.seoDescKh ||
     category.descKh ||
-    `ព័ត៌មាន${category.nameKh}ថ្មីៗ និងរហ័សបំផុតពី Cambodia Fast News`
+    `ព័ត៌មាន${category.nameKh}ថ្មីៗ និងរហ័សបំផុតពី ${nameEn.value}`
 
   return useSiteSeo({
     title: page > 1 ? `${title} — ទំព័រ ${page}` : title,

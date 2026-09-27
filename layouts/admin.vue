@@ -48,7 +48,7 @@ watch(() => route.fullPath, () => { sidebarOpen.value = false })
       ]"
     >
       <div class="border-b border-line p-4">
-        <NuxtLink to="/admin"><TheLogo class="h-8 w-auto" /></NuxtLink>
+        <NuxtLink to="/admin" class="block w-fit"><TheLogo class="[--logo-h:2rem]" /></NuxtLink>
         <p class="mt-1 text-[10px] uppercase tracking-widest text-ink-muted">{{ t('newsroom') }}</p>
       </div>
 
@@ -117,7 +117,7 @@ watch(() => route.fullPath, () => { sidebarOpen.value = false })
             <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round" />
           </svg>
         </button>
-        <TheLogo class="h-7 w-auto" />
+        <TheLogo class="[--logo-h:1.75rem]" />
       </header>
 
       <main class="flex-1 p-4 lg:p-6">

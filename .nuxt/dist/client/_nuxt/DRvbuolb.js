@@ -1,1 +1,0 @@
-import{d as a,k as n,c as s,O as o,o as r}from"./WH_6qSHm.js";const p=a({__name:"telegram",async setup(c){let e,t;return[e,t]=n(()=>o("/admin/settings",{replace:!0})),await e,t(),(_,i)=>(r(),s("div"))}});export{p as default};

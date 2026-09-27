@@ -25,17 +25,20 @@ interface _GlobalComponents {
   ArticleImageNotice: typeof import("../../components/ArticleImageNotice.vue")['default']
   ArticleShare: typeof import("../../components/ArticleShare.vue")['default']
   ArticleSidebarTrending: typeof import("../../components/ArticleSidebarTrending.vue")['default']
+  BottomSheet: typeof import("../../components/BottomSheet.vue")['default']
   BreakingBadge: typeof import("../../components/BreakingBadge.vue")['default']
   BreakingNewsBar: typeof import("../../components/BreakingNewsBar.vue")['default']
   CategorySection: typeof import("../../components/CategorySection.vue")['default']
   ConfirmDialog: typeof import("../../components/ConfirmDialog.vue")['default']
   CorrectionNotice: typeof import("../../components/CorrectionNotice.vue")['default']
+  ExpandTransition: typeof import("../../components/ExpandTransition.vue")['default']
   FileUpload: typeof import("../../components/FileUpload.vue")['default']
   FiveMinuteNews: typeof import("../../components/FiveMinuteNews.vue")['default']
   ImageField: typeof import("../../components/ImageField.vue")['default']
   ImageViewer: typeof import("../../components/ImageViewer.vue")['default']
   InfiniteFooter: typeof import("../../components/InfiniteFooter.vue")['default']
   MobileStickyAd: typeof import("../../components/MobileStickyAd.vue")['default']
+  MonthSectionFilter: typeof import("../../components/MonthSectionFilter.vue")['default']
   NewsCard: typeof import("../../components/NewsCard.vue")['default']
   NewsCardMeta: typeof import("../../components/NewsCardMeta.vue")['default']
   NewsPulse: typeof import("../../components/NewsPulse.vue")['default']
@@ -47,6 +50,7 @@ interface _GlobalComponents {
   SectionHeading: typeof import("../../components/SectionHeading.vue")['default']
   SelectField: typeof import("../../components/SelectField.vue")['default']
   ShareLinks: typeof import("../../components/ShareLinks.vue")['default']
+  SiteSearchForm: typeof import("../../components/SiteSearchForm.vue")['default']
   SmartImage: typeof import("../../components/SmartImage.vue")['default']
   SponsoredBadge: typeof import("../../components/SponsoredBadge.vue")['default']
   TheFooter: typeof import("../../components/TheFooter.vue")['default']
@@ -90,17 +94,20 @@ interface _GlobalComponents {
   LazyArticleImageNotice: LazyComponent<typeof import("../../components/ArticleImageNotice.vue")['default']>
   LazyArticleShare: LazyComponent<typeof import("../../components/ArticleShare.vue")['default']>
   LazyArticleSidebarTrending: LazyComponent<typeof import("../../components/ArticleSidebarTrending.vue")['default']>
+  LazyBottomSheet: LazyComponent<typeof import("../../components/BottomSheet.vue")['default']>
   LazyBreakingBadge: LazyComponent<typeof import("../../components/BreakingBadge.vue")['default']>
   LazyBreakingNewsBar: LazyComponent<typeof import("../../components/BreakingNewsBar.vue")['default']>
   LazyCategorySection: LazyComponent<typeof import("../../components/CategorySection.vue")['default']>
   LazyConfirmDialog: LazyComponent<typeof import("../../components/ConfirmDialog.vue")['default']>
   LazyCorrectionNotice: LazyComponent<typeof import("../../components/CorrectionNotice.vue")['default']>
+  LazyExpandTransition: LazyComponent<typeof import("../../components/ExpandTransition.vue")['default']>
   LazyFileUpload: LazyComponent<typeof import("../../components/FileUpload.vue")['default']>
   LazyFiveMinuteNews: LazyComponent<typeof import("../../components/FiveMinuteNews.vue")['default']>
   LazyImageField: LazyComponent<typeof import("../../components/ImageField.vue")['default']>
   LazyImageViewer: LazyComponent<typeof import("../../components/ImageViewer.vue")['default']>
   LazyInfiniteFooter: LazyComponent<typeof import("../../components/InfiniteFooter.vue")['default']>
   LazyMobileStickyAd: LazyComponent<typeof import("../../components/MobileStickyAd.vue")['default']>
+  LazyMonthSectionFilter: LazyComponent<typeof import("../../components/MonthSectionFilter.vue")['default']>
   LazyNewsCard: LazyComponent<typeof import("../../components/NewsCard.vue")['default']>
   LazyNewsCardMeta: LazyComponent<typeof import("../../components/NewsCardMeta.vue")['default']>
   LazyNewsPulse: LazyComponent<typeof import("../../components/NewsPulse.vue")['default']>
@@ -112,6 +119,7 @@ interface _GlobalComponents {
   LazySectionHeading: LazyComponent<typeof import("../../components/SectionHeading.vue")['default']>
   LazySelectField: LazyComponent<typeof import("../../components/SelectField.vue")['default']>
   LazyShareLinks: LazyComponent<typeof import("../../components/ShareLinks.vue")['default']>
+  LazySiteSearchForm: LazyComponent<typeof import("../../components/SiteSearchForm.vue")['default']>
   LazySmartImage: LazyComponent<typeof import("../../components/SmartImage.vue")['default']>
   LazySponsoredBadge: LazyComponent<typeof import("../../components/SponsoredBadge.vue")['default']>
   LazyTheFooter: LazyComponent<typeof import("../../components/TheFooter.vue")['default']>

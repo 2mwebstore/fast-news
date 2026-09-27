@@ -4,6 +4,7 @@ import type { ApiMeta, ArticleCard } from '~/types'
 /** Author profile (§18), including Person structured data. */
 const route = useRoute()
 const config = useRuntimeConfig()
+const { nameEn: siteName } = useSite()
 const api = useApi()
 
 interface AuthorDetail {
@@ -37,7 +38,7 @@ const meta = computed<ApiMeta | undefined>(() => data.value!.meta)
 
 useSiteSeo({
   title: `${author.value.nameKh}${author.value.title ? ` — ${author.value.title}` : ''}`,
-  description: author.value.bioKh || `អត្ថបទទាំងអស់ដោយ ${author.value.nameKh} នៅ Cambodia Fast News។`,
+  description: author.value.bioKh || `អត្ថបទទាំងអស់ដោយ ${author.value.nameKh} នៅ ${siteName.value}។`,
   path: `/author/${author.value.slug}`,
   image: author.value.photoUrl,
   robots: page.value > 1 ? 'noindex, follow' : undefined,
@@ -58,7 +59,7 @@ useJsonLd({
   image: author.value.photoUrl || undefined,
   url: `${config.public.siteUrl}/author/${author.value.slug}`,
   ...(profiles.value.length ? { sameAs: profiles.value } : {}),
-  worksFor: { '@type': 'NewsMediaOrganization', name: config.public.siteName },
+  worksFor: { '@type': 'NewsMediaOrganization', name: siteName.value },
 })
 </script>
 

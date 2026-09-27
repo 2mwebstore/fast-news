@@ -13,21 +13,12 @@ import type { CategoryDetail } from '~/types'
  * become a dead link, and these feed Organization sameAs (§47) — claiming a
  * profile the newsroom does not own would be a false statement about identity.
  */
-interface SiteInfo {
-  taglineKh: string
-  taglineEn: string
-  contactEmail: string
-  contactPhone: string
-  addressKh: string
-  addressEn: string
-  social: { key: string; label: string; url: string }[]
-}
-
 const { t, locale } = useLocale()
-const config = useRuntimeConfig()
+// Loaded once for the whole app by plugins/site.ts; the header and page
+// titles read the same record.
+const { info: site, name: siteName, nameEn } = useSite()
 
 const { data: categories } = await useAsyncApi<CategoryDetail[]>('nav-categories', '/api/categories')
-const { data: site } = await useAsyncApi<SiteInfo>('site-info', '/api/site')
 
 // Policy links come from the pages table, so adding or retiring one is an edit
 // in the admin rather than a deploy. Only published pages flagged for the footer
@@ -69,10 +60,6 @@ const policyLinks = computed(() =>
     label: locale.value === 'en' && p.titleEn ? p.titleEn : p.titleKh,
   })),
 )
-
-const siteName = computed(() =>
-  locale.value === 'en' ? config.public.siteName : config.public.siteNameKh,
-)
 </script>
 
 <template>
@@ -80,7 +67,7 @@ const siteName = computed(() =>
     <div class="container-content py-10">
       <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <div class="lg:col-span-1">
-          <TheLogo class="h-9 w-auto" />
+          <TheLogo class="[--logo-h:2.25rem]" />
           <p v-if="tagline" class="mt-3 text-kh-sm text-ink-muted khmer-wrap">{{ tagline }}</p>
 
           <ul v-if="site?.social?.length" class="mt-4 flex flex-wrap gap-3">
@@ -144,7 +131,7 @@ const siteName = computed(() =>
       </div>
 
       <div class="mt-8 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
-        <p>© {{ year }} {{ config.public.siteName }}. {{ t('allRightsReserved') }}</p>
+        <p>© {{ year }} {{ nameEn }}. {{ t('allRightsReserved') }}</p>
         <p class="khmer-wrap">{{ siteName }}</p>
       </div>
     </div>

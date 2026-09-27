@@ -174,6 +174,26 @@ export interface TrafficRoute {
   observedAt: string
 }
 
+/**
+ * The site's identity and footer details, from GET /api/site. An administrator
+ * edits them in Admin → Settings; the runtime config supplies the defaults.
+ */
+export interface SiteInfo {
+  nameEn: string
+  nameKh: string
+  /** Uploaded logo, or a path on the site. Empty means the built-in mark. */
+  logoUrl: string
+  /** Write the site name beside an uploaded logo (for icon-only logos). */
+  logoShowName: boolean
+  taglineKh: string
+  taglineEn: string
+  contactEmail: string
+  contactPhone: string
+  addressKh: string
+  addressEn: string
+  social: { key: string; label: string; url: string }[]
+}
+
 export interface ApiMeta {
   page: number
   limit: number

@@ -9,7 +9,6 @@ import type { ArticleCard, ArticleDetail } from '~/types'
  * translation exists — hreflang.
  */
 const route = useRoute()
-const config = useRuntimeConfig()
 const api = useApi()
 const { dateTime, iso, khNumber } = useFormat()
 const { t, title, summary, body, missingTranslation, categoryName, isEnglish } = useLocale()
@@ -139,7 +138,7 @@ if (import.meta.client) {
             class="mt-4 rounded-lg border border-warning/40 bg-warning/5 p-3 text-kh-sm khmer-wrap"
           >
             {{ t('sponsoredBy') }}<strong v-if="article.sponsorName"> {{ article.sponsorName }}</strong>។
-            {{ t('sponsoredDisclaimer', { site: config.public.siteName }) }}
+            {{ t('sponsoredDisclaimer') }}
           </div>
 
           <!-- Byline and dates. dateModified is only shown when the body was

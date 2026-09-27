@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ApiMeta, ArticleCard, AuthorRef, CategoryRef, VideoCard as VideoCardType } from '~/types'
+import type { ApiMeta, ArticleCard, AuthorRef, CategoryDetail, CategoryRef, VideoCard as VideoCardType } from '~/types'
 
 /**
  * Search (§32).
@@ -8,13 +8,52 @@ import type { ApiMeta, ArticleCard, AuthorRef, CategoryRef, VideoCard as VideoCa
  * otherwise flood the index with thousands of near-duplicate URLs.
  */
 
-const { t } = useLocale()
+const { t, categoryName } = useLocale()
 const route = useRoute()
 const router = useRouter()
 const api = useApi()
 
 const term = ref(String(route.query.q ?? ''))
 const page = computed(() => Math.max(1, Number(route.query.page) || 1))
+
+// Back/forward changes the query without remounting; keep the field in step.
+watch(() => route.query.q, (q) => { term.value = String(q ?? '') })
+
+// Emptying the field (backspace, or the field's own ✕) drops ?q= straight
+// away rather than leaving results for a term that is no longer there.
+// replace, not push: each cleared field is not a step worth going back to.
+watch(term, (value) => {
+  if (!value.trim() && route.query.q) {
+    router.replace({ path: '/search', query: { ...route.query, q: undefined, page: undefined } })
+  }
+})
+
+const { data: categories } = await useAsyncApi<CategoryDetail[]>('nav-categories', '/api/categories')
+
+const hasQuery = computed(() => String(route.query.q ?? '').trim().length >= 2)
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+/**
+ * The month filter is ?year=&month= in the URL, the same as the archive, but
+ * the API takes a date range. An explicit ?from=&to= still works for links
+ * made before the filter existed.
+ */
+function dateRange() {
+  const y = Number(route.query.year) || 0
+  const m = Number(route.query.month) || 0
+  if (!y) return { from: route.query.from, to: route.query.to }
+  if (!m) return { from: `${y}-01-01`, to: `${y}-12-31` }
+  const lastDay = new Date(y, m, 0).getDate()
+  return { from: `${y}-${pad(m)}-01`, to: `${y}-${pad(m)}-${pad(lastDay)}` }
+}
+
+function searchQuery(p: number) {
+  return {
+    q: String(route.query.q ?? '').trim(), page: p, limit: 20,
+    category: route.query.category, ...dateRange(),
+  }
+}
 
 interface SearchResults {
   query: string
@@ -25,21 +64,19 @@ interface SearchResults {
 }
 
 const { data, pending } = await useAsyncData(
-  () => `search-${route.query.q}-${page.value}`,
+  () => `search-${route.query.q}-${route.query.year}-${route.query.month}-${route.query.category}-${page.value}`,
   async () => {
-    const q = String(route.query.q ?? '').trim()
-    if (q.length < 2) return null
-    const result = await api.list<SearchResults>('/api/search', {
-      q, page: page.value, limit: 20,
-      category: route.query.category, from: route.query.from, to: route.query.to,
-    })
+    if (!hasQuery.value) return null
+    const result = await api.list<SearchResults>('/api/search', searchQuery(page.value))
     return { ...result.data, meta: result.meta }
   },
   { watch: [() => route.query] },
 )
 
-function submit() {
-  router.push({ path: '/search', query: { ...route.query, q: term.value.trim(), page: undefined } })
+// A new term keeps the month and section already chosen. An empty one clears
+// the search instead of searching for nothing.
+function submit(q: string) {
+  router.push({ path: '/search', query: { ...route.query, q: q || undefined, page: undefined } })
 }
 
 const meta = computed<ApiMeta | undefined>(() => data.value?.meta)
@@ -54,10 +91,7 @@ const {
   reset: resetFeed,
 } = usePagedFeed<ArticleCard>(
   async (nextPage) => {
-    const result = await api.list<SearchResults>('/api/search', {
-      q: String(route.query.q ?? '').trim(), page: nextPage, limit: 20,
-      category: route.query.category, from: route.query.from, to: route.query.to,
-    })
+    const result = await api.list<SearchResults>('/api/search', searchQuery(nextPage))
     return { data: result.data.articles ?? [], meta: result.meta }
   },
   { meta: meta.value },
@@ -80,16 +114,11 @@ useSiteSeo({
   <div class="container-content">
     <h1 class="text-kh-2xl font-bold">{{ t('search') }}</h1>
 
-    <form class="mt-4 flex gap-2" @submit.prevent="submit">
-      <input
-        v-model="term" type="search" name="q"
-        :placeholder="t('searchKeyword')"
-        class="w-full rounded-lg border border-line bg-surface-muted px-4 py-3 text-kh-base outline-none focus:border-brand"
-      >
-      <button type="submit" class="rounded-lg bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark">
-        {{ t('search') }}
-      </button>
-    </form>
+    <!-- The header's search icon focuses this field by id on this page
+         rather than opening a second one. -->
+    <SiteSearchForm v-model="term" input-id="page-search" class="mt-4 lg:max-w-2xl" @submit="submit" />
+
+    <MonthSectionFilter v-if="hasQuery" :categories="categories ?? []" class="mt-3" />
 
     <div v-if="pending" class="py-12 text-center text-ink-muted">{{ t('searching') }}</div>
 
@@ -130,7 +159,7 @@ useSiteSeo({
             <ul class="space-y-2">
               <li v-for="c in data.categories" :key="c.slug">
                 <NuxtLink :to="`/category/${c.slug}`" class="text-kh-sm hover:text-brand">
-                  {{ c.icon }} {{ c.nameKh }}
+                  {{ c.icon }} {{ categoryName(c) }}
                 </NuxtLink>
               </li>
             </ul>

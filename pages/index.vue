@@ -33,9 +33,12 @@ const sectionsToRender = computed(() =>
     .filter((c): c is CategoryDetail => Boolean(c)),
 )
 
+const { nameEn, nameKh } = useSite()
+
 useSiteSeo({
   // Already carries the brand, so the title template will not re-append it.
-  title: `${locale.value === 'en' ? config.public.siteName : config.public.siteNameKh} | Cambodia Fast News`,
+  // In English the name alone: "Name | Name" would repeat it.
+  title: locale.value === 'en' ? nameEn.value : `${nameKh.value} | ${nameEn.value}`,
   description: t('homeDesc'),
   path: '/',
   image: `${config.public.siteUrl}/og-default.png`,

@@ -103,6 +103,7 @@ useHead({ title: 'Media — Newsroom' })
         <option value="author">{{ t('folderAuthor') }}</option>
         <option value="ad">{{ t('folderAd') }}</option>
         <option value="video">{{ t('folderVideo') }}</option>
+        <option value="site">{{ t('folderSite') }}</option>
       </select>
 
       <label class="cursor-pointer rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">

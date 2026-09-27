@@ -1,1 +1,0 @@
-import{_ as a}from"./w9sgnVKM.js";import{d as s,k as i,p as c,o,q as _,f as p}from"./WH_6qSHm.js";const g=s({__name:"ArticleSidebarTrending",async setup(m){let e,n;const{data:t}=([e,n]=i(()=>c("article-trending","/api/trending",{limit:6})),e=await e,n(),e);return(l,d)=>{const r=a;return o(),_(r,{articles:p(t)??[]},null,8,["articles"])}}});export{g as _};

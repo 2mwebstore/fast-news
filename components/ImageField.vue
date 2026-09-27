@@ -19,7 +19,7 @@ const model = defineModel<string>({ default: '' })
 
 withDefaults(defineProps<{
   label?: string
-  /** Media library folder: article | author | ad | video | tip. */
+  /** Media library folder: article | author | ad | video | tip | site. */
   folder?: string
   maxSizeMb?: number
   /** Ratio for the preview box, matching where the image will be used. */
@@ -28,12 +28,15 @@ withDefaults(defineProps<{
   hint?: string
   /** Rendered under the label, e.g. to mark the field required. */
   required?: boolean
+  /** How the preview fills its box. A logo must not be cropped. */
+  fit?: 'cover' | 'contain'
 }>(), {
   folder: 'article',
   maxSizeMb: 10,
   ratio: '16 / 9',
   placeholder: 'https://…',
   required: false,
+  fit: 'cover',
 })
 
 const emit = defineEmits<{
@@ -124,7 +127,7 @@ const showExternalNote = computed(() =>
         <img
           v-if="!failed"
           :src="model" alt=""
-          class="h-full w-full object-cover"
+          :class="['h-full w-full', fit === 'contain' ? 'object-contain p-2' : 'object-cover']"
           @load="onPreviewLoad"
           @error="failed = true"
         >

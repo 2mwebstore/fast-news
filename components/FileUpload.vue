@@ -21,7 +21,7 @@ export interface UploadedFile {
 }
 
 const props = withDefaults(defineProps<{
-  /** Media library folder: article | author | ad | video | tip. */
+  /** Media library folder: article | author | ad | video | tip | site. */
   folder?: string
   accept?: string
   multiple?: boolean

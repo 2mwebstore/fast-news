@@ -34,6 +34,7 @@ export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
 export { useAdminApi } from '../composables/useAdminApi';
 export { useAdminLocale, AdminMessageKey } from '../composables/useAdminLocale';
 export { useApi, useAsyncApi, pageError } from '../composables/useApi';
+export { useArchiveMonths } from '../composables/useArchiveMonths';
 export { useBreakingSocket } from '../composables/useBreakingSocket';
 export { useFormat } from '../composables/useFormat';
 export { MONTH_NAMES, useLocale, Locale, MessageKey } from '../composables/useLocale';
@@ -41,6 +42,7 @@ export { useMeta, MetaOption, ContentTypeOption, StatusMetaOption, PlatformMeta 
 export { usePagedFeed } from '../composables/usePagedFeed';
 export { usePush } from '../composables/usePush';
 export { useSiteSeo, useJsonLd, useOrganizationSchema, useArticleSchema, useBreadcrumbSchema, useHreflang, useCategorySeo } from '../composables/useSeo';
+export { useSite } from '../composables/useSite';
 export { useAuthStore } from '../stores/auth';
 export { useBreakingStore } from '../stores/breaking';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';

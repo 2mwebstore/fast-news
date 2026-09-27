@@ -162,6 +162,7 @@ declare global {
   const useAnimate: typeof import('@vueuse/core').useAnimate
   const useApi: typeof import('../../composables/useApi').useApi
   const useAppConfig: typeof import('../../node_modules/nuxt/dist/app/config').useAppConfig
+  const useArchiveMonths: typeof import('../../composables/useArchiveMonths').useArchiveMonths
   const useArrayDifference: typeof import('@vueuse/core').useArrayDifference
   const useArrayEvery: typeof import('@vueuse/core').useArrayEvery
   const useArrayFilter: typeof import('@vueuse/core').useArrayFilter
@@ -369,6 +370,7 @@ declare global {
   const useSessionStorage: typeof import('@vueuse/core').useSessionStorage
   const useShadowRoot: typeof import('vue').useShadowRoot
   const useShare: typeof import('@vueuse/core').useShare
+  const useSite: typeof import('../../composables/useSite').useSite
   const useSiteSeo: typeof import('../../composables/useSeo').useSiteSeo
   const useSlots: typeof import('vue').useSlots
   const useSorted: typeof import('@vueuse/core').useSorted
@@ -617,6 +619,7 @@ declare module 'vue' {
     readonly useAnimate: UnwrapRef<typeof import('@vueuse/core')['useAnimate']>
     readonly useApi: UnwrapRef<typeof import('../../composables/useApi')['useApi']>
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/config')['useAppConfig']>
+    readonly useArchiveMonths: UnwrapRef<typeof import('../../composables/useArchiveMonths')['useArchiveMonths']>
     readonly useArrayDifference: UnwrapRef<typeof import('@vueuse/core')['useArrayDifference']>
     readonly useArrayEvery: UnwrapRef<typeof import('@vueuse/core')['useArrayEvery']>
     readonly useArrayFilter: UnwrapRef<typeof import('@vueuse/core')['useArrayFilter']>
@@ -824,6 +827,7 @@ declare module 'vue' {
     readonly useSessionStorage: UnwrapRef<typeof import('@vueuse/core')['useSessionStorage']>
     readonly useShadowRoot: UnwrapRef<typeof import('vue')['useShadowRoot']>
     readonly useShare: UnwrapRef<typeof import('@vueuse/core')['useShare']>
+    readonly useSite: UnwrapRef<typeof import('../../composables/useSite')['useSite']>
     readonly useSiteSeo: UnwrapRef<typeof import('../../composables/useSeo')['useSiteSeo']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useSorted: UnwrapRef<typeof import('@vueuse/core')['useSorted']>

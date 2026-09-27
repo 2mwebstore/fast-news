@@ -41,7 +41,7 @@ useSeoMeta({ robots: 'noindex, nofollow' })
   <div class="flex min-h-screen items-center justify-center bg-surface-muted px-4">
     <div class="w-full max-w-sm">
       <div class="mb-6 text-center">
-        <TheLogo class="mx-auto h-10 w-auto" />
+        <TheLogo class="mx-auto [--logo-h:2.5rem]" />
         <p class="mt-2 text-xs uppercase tracking-widest text-ink-muted">Newsroom sign in</p>
       </div>
 

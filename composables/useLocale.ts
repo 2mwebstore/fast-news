@@ -140,13 +140,16 @@ const messages = {
     language: 'ភាសា',
     searching: 'កំពុងស្វែងរក...',
     searchMinChars: 'សូមវាយបញ្ចូលពាក្យគន្លឹះយ៉ាងតិច ២ តួអក្សរ។',
-    searchKeyword: 'វាយបញ្ចូលពាក្យគន្លឹះ...',
     foundResults: 'រកឃើញ {n} លទ្ធផលសម្រាប់ “{q}”',
     noArticlesFound: 'រកមិនឃើញអត្ថបទទេ។',
     authors: 'អ្នកសរសេរ',
     archiveTitle: 'បណ្ណសារព័ត៌មាន',
     byMonth: 'តាមខែ',
     bySection: 'តាមផ្នែក',
+    wholeYear: 'ពេញឆ្នាំ {year}',
+    allDates: 'គ្រប់ពេល',
+    allSections: 'គ្រប់ផ្នែក',
+    clearFilters: 'សម្អាត',
     all: 'ទាំងអស់',
     noArticlesForSelection: 'មិនមានអត្ថបទសម្រាប់ជម្រើសនេះទេ។',
     liveUpdating: 'កំពុងធ្វើបច្ចុប្បន្នភាពផ្ទាល់',
@@ -166,18 +169,18 @@ const messages = {
     sponsoredBy: 'ខ្លឹមសារនេះត្រូវបានឧបត្ថម្ភដោយ',
     sponsoredDisclaimer: 'វាមិនមែនជាការរាយការណ៍ព័ត៌មានឯករាជ្យរបស់ {site} ទេ។',
     quickRead: 'អានឆាប់រហ័ស',
-    archiveDesc: 'បណ្ណសារព័ត៌មានទាំងអស់របស់ Cambodia Fast News តាមឆ្នាំ និងខែ។',
+    archiveDesc: 'បណ្ណសារព័ត៌មានទាំងអស់របស់ {site} តាមឆ្នាំ និងខែ។',
     homeDesc: 'ព័ត៌មានទាន់ហេតុការណ៍ពីកម្ពុជា និងពិភពលោក — នយោបាយ សេដ្ឋកិច្ច កីឡា គុនខ្មែរ បច្ចេកវិទ្យា និងកម្សាន្ត។',
-    liveVideoDesc: 'ការផ្សាយផ្ទាល់ពី Cambodia Fast News។',
-    liveDesc: 'ព័ត៌មានបន្ទាន់ និងថ្មីបំផុតពី Cambodia Fast News ផ្សាយផ្ទាល់។',
-    searchDesc: 'ស្វែងរកព័ត៌មាន វីដេអូ និងអ្នកសរសេរនៅ Cambodia Fast News។',
-    videoDesc: 'វីដេអូព័ត៌មានថ្មីៗពី Cambodia Fast News។',
+    liveVideoDesc: 'ការផ្សាយផ្ទាល់ពី {site}។',
+    liveDesc: 'ព័ត៌មានបន្ទាន់ និងថ្មីបំផុតពី {site} ផ្សាយផ្ទាល់។',
+    searchDesc: 'ស្វែងរកព័ត៌មាន វីដេអូ និងអ្នកសរសេរនៅ {site}។',
+    videoDesc: 'វីដេអូព័ត៌មានថ្មីៗពី {site}។',
     searchNews: 'ស្វែងរកព័ត៌មាន',
     archiveFor: 'បណ្ណសារ {month} {year}',
     liveColon: 'ផ្សាយផ្ទាល់៖',
     searchColon: 'ស្វែងរក៖',
     tipTitle: 'ផ្ញើព័ត៌មានមកយើង',
-    tipDesc: 'ផ្ញើព័ត៌មាន រូបភាព ឬវីដេអូមកកាន់បន្ទប់ព័ត៌មាន Cambodia Fast News។',
+    tipDesc: 'ផ្ញើព័ត៌មាន រូបភាព ឬវីដេអូមកកាន់បន្ទប់ព័ត៌មាន {site}។',
     tipIntro: 'រាល់ព័ត៌មានដែលផ្ញើមកនឹងត្រូវបានពិនិត្យ និងផ្ទៀងផ្ទាត់ដោយអ្នកកែសម្រួលជាមុនសិន។ គ្មានអ្វីត្រូវបានផ្សាយដោយស្វ័យប្រវត្តិទេ។',
     tipThanks: 'សូមអរគុណ!',
     tipReceived: 'ព័ត៌មានរបស់អ្នកបានមកដល់បន្ទប់ព័ត៌មានហើយ។ អ្នកកែសម្រួលនឹងពិនិត្យវា។',
@@ -312,13 +315,16 @@ const messages = {
     language: 'Language',
     searching: 'Searching…',
     searchMinChars: 'Please enter at least 2 characters.',
-    searchKeyword: 'Type a keyword…',
     foundResults: 'Found {n} results for “{q}”',
     noArticlesFound: 'No articles found.',
     authors: 'Journalists',
     archiveTitle: 'News archive',
     byMonth: 'By month',
     bySection: 'By section',
+    wholeYear: 'All of {year}',
+    allDates: 'All dates',
+    allSections: 'All sections',
+    clearFilters: 'Clear',
     all: 'All',
     noArticlesForSelection: 'No articles for this selection.',
     liveUpdating: 'Updating live',
@@ -338,18 +344,18 @@ const messages = {
     sponsoredBy: 'This content is sponsored by',
     sponsoredDisclaimer: 'It is not independent reporting by {site}.',
     quickRead: 'Quick read',
-    archiveDesc: 'Every Cambodia Fast News story, by year and month.',
+    archiveDesc: 'Every {site} story, by year and month.',
     homeDesc: 'Breaking news from Cambodia and the world — politics, business, sport, Kun Khmer, technology and entertainment.',
-    liveVideoDesc: 'Live broadcasts from Cambodia Fast News.',
-    liveDesc: 'Breaking and latest news from Cambodia Fast News, live.',
-    searchDesc: 'Search articles, videos and journalists at Cambodia Fast News.',
-    videoDesc: 'The latest news video from Cambodia Fast News.',
+    liveVideoDesc: 'Live broadcasts from {site}.',
+    liveDesc: 'Breaking and latest news from {site}, live.',
+    searchDesc: 'Search articles, videos and journalists at {site}.',
+    videoDesc: 'The latest news video from {site}.',
     searchNews: 'Search news',
     archiveFor: 'Archive {month} {year}',
     liveColon: 'Live:',
     searchColon: 'Search:',
     tipTitle: 'Send us a tip',
-    tipDesc: 'Send news, photos or video to the Cambodia Fast News newsroom.',
+    tipDesc: 'Send news, photos or video to the {site} newsroom.',
     tipIntro: 'Every submission is reviewed and verified by an editor first. Nothing is published automatically.',
     tipThanks: 'Thank you!',
     tipReceived: 'Your tip has reached the newsroom. An editor will review it.',
@@ -397,13 +403,21 @@ export function useLocale() {
     cookie.value = next
   }
 
-  /** Looks up a chrome string, with `{n}` interpolation. */
+  // Read directly rather than through useSite(), which itself uses this
+  // composable. plugins/site.ts fills it.
+  const siteInfo = useState<{ nameEn?: string } | null>('site-info', () => null)
+  const config = useRuntimeConfig()
+
+  /**
+   * Looks up a chrome string, with `{n}` interpolation. `{site}` is always
+   * available: it is the site name from Admin → Settings, so renaming the site
+   * reaches every description without editing this file.
+   */
   function t(key: MessageKey, params?: Record<string, string | number>): string {
     let value: string = messages[locale.value][key] ?? messages.km[key] ?? key
-    if (params) {
-      for (const [name, replacement] of Object.entries(params)) {
-        value = value.replace(`{${name}}`, String(replacement))
-      }
+    const all = { site: siteInfo.value?.nameEn || config.public.siteName, ...params }
+    for (const [name, replacement] of Object.entries(all)) {
+      value = value.replace(`{${name}}`, String(replacement))
     }
     return value
   }

@@ -9,7 +9,7 @@ import type { ApiMeta, ArticleCard, CategoryDetail } from '~/types'
  * the thin content §33 warns against.
  */
 
-const { t, locale } = useLocale()
+const { t, locale, categoryName } = useLocale()
 const route = useRoute()
 const api = useApi()
 
@@ -63,8 +63,7 @@ const allArticles = computed(() => [...articles.value, ...extraArticles.value])
 
 const monthNames = computed(() => MONTH_NAMES[locale.value])
 
-const now = new Date()
-const currentYear = now.getFullYear()
+const { currentYear, years, monthsOf } = useArchiveMonths()
 
 /**
  * Which year's months the picker is showing. The current year by default, so a
@@ -75,28 +74,7 @@ const currentYear = now.getFullYear()
  * that month's own year rather than resetting to now.
  */
 const listedYear = computed(() => year.value || currentYear)
-
-// The site launched in 2025; there is nothing older to offer.
-const FIRST_YEAR = 2025
-const years = computed(() => {
-  const out: number[] = []
-  for (let y = currentYear; y >= FIRST_YEAR; y -= 1) out.push(y)
-  return out
-})
-
-// Newest month first, and never a month that has not happened yet — a future
-// month can only ever be an empty page.
-const months = computed(() => {
-  const lastMonth = listedYear.value === currentYear ? now.getMonth() + 1 : 12
-  return Array.from({ length: lastMonth }, (_, i) => {
-    const monthNumber = lastMonth - i
-    return {
-      year: listedYear.value,
-      month: monthNumber,
-      label: `${monthNames.value[monthNumber - 1]} ${listedYear.value}`,
-    }
-  })
-})
+const months = computed(() => monthsOf(listedYear.value))
 
 const hasContent = computed(() => articles.value.length > 0)
 
@@ -114,8 +92,12 @@ useSiteSeo({
   <div class="container-content">
     <h1 class="text-kh-2xl font-bold">{{ t('archiveTitle') }}</h1>
 
+    <!-- Below lg the sidebar would push the first article off screen, so the
+         same filters fold into two dropdowns. -->
+    <MonthSectionFilter :categories="categories ?? []" class="mt-4 lg:hidden" />
+
     <div class="mt-6 grid gap-8 lg:grid-cols-4">
-      <aside class="lg:col-span-1">
+      <aside class="hidden lg:col-span-1 lg:block">
         <SectionHeading :title="t('byMonth')" />
 
         <!-- Year switcher, shown only once there is more than one year of
@@ -158,7 +140,7 @@ useSiteSeo({
             <NuxtLink
               :to="{ path: '/archive', query: { year: year || undefined, month: month || undefined, category: c.slug } }"
               :class="['block rounded px-2 py-1.5 text-kh-sm', category === c.slug ? 'bg-brand text-white' : 'hover:bg-surface-muted']"
-            >{{ c.nameKh }}</NuxtLink>
+            >{{ categoryName(c) }}</NuxtLink>
           </li>
         </ul>
       </aside>
@@ -187,3 +169,4 @@ useSiteSeo({
     </div>
   </div>
 </template>
+

@@ -4,6 +4,7 @@ import type { VideoCard as VideoCardType } from '~/types'
 /** Video detail (§26) with VideoObject structured data. */
 const route = useRoute()
 const config = useRuntimeConfig()
+const { nameEn: siteName } = useSite()
 const api = useApi()
 const { duration, dateTime, compact } = useFormat()
 const { t, title: localTitle, locale } = useLocale()
@@ -53,7 +54,7 @@ useJsonLd({
   duration: video.value.durationSec ? `PT${video.value.durationSec}S` : undefined,
   contentUrl: video.value.watchUrl || video.value.sourceUrl || undefined,
   embedUrl: video.value.embedUrl || `${config.public.siteUrl}/video/${video.value.slug}`,
-  publisher: { '@type': 'NewsMediaOrganization', name: config.public.siteName },
+  publisher: { '@type': 'NewsMediaOrganization', name: siteName.value },
 })
 </script>
 

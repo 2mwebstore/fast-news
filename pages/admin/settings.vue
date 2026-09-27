@@ -62,6 +62,27 @@ const siteKeys = [
 const site = ref<Record<string, string>>({})
 const savingSite = ref(false)
 
+// Save feedback for the two site cards, shown beside the button that was
+// pressed rather than down in the Telegram card.
+const siteNotice = ref<{ section: 'brand' | 'details'; ok: boolean; text: string } | null>(null)
+
+// ── Brand ──────────────────────────────────────────────────────────────────
+// The name and logo readers see in the header, footer, browser tab and search
+// results. Saved with the rest of the site details (same endpoint).
+const { refresh: refreshSite } = useSite()
+
+const logoShowName = computed({
+  get: () => site.value['site.logo_show_name'] === 'true',
+  set: (value: boolean) => { site.value['site.logo_show_name'] = value ? 'true' : 'false' },
+})
+
+// What the header will draw, from the form as it stands — before saving.
+const brandPreview = computed(() => ({
+  nameEn: site.value['site.name'] ?? '',
+  logoUrl: site.value['site.logo_url'] ?? '',
+  showName: logoShowName.value,
+}))
+
 async function loadSite() {
   try {
     site.value = await api.get<Record<string, string>>('/api/admin/settings/site')
@@ -70,16 +91,21 @@ async function loadSite() {
   }
 }
 
-async function saveSite() {
+async function saveSite(section: 'brand' | 'details') {
   savingSite.value = true
-  message.value = ''
-  errorMessage.value = ''
+  siteNotice.value = null
   try {
     await api.put('/api/admin/settings/site', site.value)
-    message.value = t('saved')
+    siteNotice.value = { section, ok: true, text: t('saved') }
+    // The admin's own logo and name update now; the public site follows
+    // within a few minutes, as its cached copy expires.
+    await refreshSite().catch(() => {})
   } catch (e: unknown) {
-    errorMessage.value = (e as { data?: { message?: string } }).data?.message
-      || 'Could not save the site details.'
+    siteNotice.value = {
+      section,
+      ok: false,
+      text: (e as { data?: { message?: string } }).data?.message || 'Could not save the site details.',
+    }
   } finally {
     savingSite.value = false
   }
@@ -173,6 +199,93 @@ useHead({ title: 'Settings — Newsroom' })
     <p v-if="loading" class="py-12 text-center text-ink-muted">{{ t('loading') }}</p>
 
     <section v-if="!loading" class="card mb-6 p-6">
+      <h2 class="mb-1 font-bold">Brand</h2>
+      <p class="mb-4 text-sm text-ink-muted">
+        The name and logo readers see in the header, footer, browser tab and
+        search results. Leave a name empty to use the deployment default.
+      </p>
+
+      <!-- Drawn from the form as it stands, so the effect is visible before
+           anything is saved. -->
+      <div class="mb-5 rounded-xl border border-line bg-surface-muted p-3">
+        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Preview</p>
+        <div class="flex h-16 items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4">
+          <TheLogo :preview="brandPreview" class="[--logo-h:2.25rem]" />
+          <span class="flex shrink-0 items-center gap-2 text-ink-muted" aria-hidden="true">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" stroke-linecap="round" />
+            </svg>
+            <span class="rounded border border-line px-2 py-0.5 text-xs font-semibold">EN</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label for="site-name-en" class="mb-1 block text-sm font-medium">Site name (English)</label>
+          <input
+            id="site-name-en"
+            v-model="site['site.name']"
+            type="text"
+            maxlength="80"
+            class="w-full rounded-lg border border-line px-3 py-2 text-sm outline-none focus:border-brand"
+          >
+          <p class="mt-1 text-xs text-ink-muted">Used in the logo, browser tab and Google News.</p>
+        </div>
+        <div>
+          <label for="site-name-kh" class="mb-1 block text-sm font-medium">Site name (Khmer)</label>
+          <input
+            id="site-name-kh"
+            v-model="site['site.name_kh']"
+            type="text"
+            maxlength="80"
+            class="w-full rounded-lg border border-line px-3 py-2 text-kh-sm outline-none focus:border-brand"
+          >
+          <p class="mt-1 text-xs text-ink-muted">Shown to Khmer readers in the footer and titles.</p>
+        </div>
+      </div>
+
+      <ImageField
+        v-model="site['site.logo_url']"
+        class="mt-5"
+        label="Logo"
+        folder="site"
+        ratio="4 / 1"
+        fit="contain"
+        :max-size-mb="2"
+        hint="PNG or SVG with a transparent background — a wide wordmark, or a square icon. Leave empty for the built-in mark beside the name."
+      />
+
+      <label :class="['mt-3 flex items-start gap-2.5 text-sm', site['site.logo_url'] ? '' : 'opacity-50']">
+        <input
+          v-model="logoShowName"
+          type="checkbox"
+          :disabled="!site['site.logo_url']"
+          class="mt-0.5 rounded border-line"
+        >
+        <span>
+          Write the site name beside the logo
+          <span class="block text-xs text-ink-muted">
+            For an icon-only logo. Leave off when the logo already contains the name.
+          </span>
+        </span>
+      </label>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          class="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
+          :disabled="savingSite"
+          @click="saveSite('brand')"
+        >{{ savingSite ? t('saving') : t('save') }}</button>
+        <p
+          v-if="siteNotice?.section === 'brand'"
+          :class="['text-sm', siteNotice.ok ? 'text-success' : 'text-breaking']"
+        >{{ siteNotice.text }}</p>
+      </div>
+    </section>
+
+    <section v-if="!loading" class="card mb-6 p-6">
       <h2 class="mb-1 font-bold">Site details</h2>
       <p class="mb-4 text-sm text-ink-muted">
         Shown in the public footer. Leave a field empty to hide that row — an
@@ -193,12 +306,18 @@ useHead({ title: 'Settings — Newsroom' })
         </div>
       </div>
 
-      <button
-        type="button"
-        class="mt-4 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
-        :disabled="savingSite"
-        @click="saveSite"
-      >{{ savingSite ? t('saving') : t('save') }}</button>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          class="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
+          :disabled="savingSite"
+          @click="saveSite('details')"
+        >{{ savingSite ? t('saving') : t('save') }}</button>
+        <p
+          v-if="siteNotice?.section === 'details'"
+          :class="['text-sm', siteNotice.ok ? 'text-success' : 'text-breaking']"
+        >{{ siteNotice.text }}</p>
+      </div>
     </section>
 
     <section v-if="!loading" class="card p-6">
